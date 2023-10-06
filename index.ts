@@ -8,7 +8,7 @@ import log from './src/utils/logs';
 
 const PORT = process.env.PORT || 9000;
 const MONGODB_URI =
-  process.env.MONGODB_URI || 'mongodb://localhost:27017/task-manager';
+  process.env.MONGODB_URI || 'mongodb://localhost:27017/news-manager';
 
 mongoose
   .connect(MONGODB_URI)
