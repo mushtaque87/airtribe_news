@@ -5,6 +5,10 @@ import cors from 'cors';
 import mongoose from 'mongoose';
 import app from './src/app';
 import log from './src/utils/logs';
+import dotenv from 'dotenv';
+dotenv.config();
+
+console.log(process.env);
 
 const PORT = process.env.PORT || 9000;
 const MONGODB_URI =

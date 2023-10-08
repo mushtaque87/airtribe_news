@@ -6,6 +6,7 @@ import { User, UserDocument } from '../models/user';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import log from '../utils/logs';
+
 // import { log } from 'winston';
 
 export const signup = async (req: Request, res: Response): Promise<void> => {
@@ -28,38 +29,41 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     });
 };
 
-// export const signin = async (req: Request, res: Response): Promise<void> => {
-//   let emailPassed = req.body.email;
-//   let passwordPassed = req.body.password;
-//   User.findOne({
-//     email: emailPassed,
-//   }).then((user: UserDocument) => {
-//     if (!user) {
-//       return res.status(404).send({ message: 'User not found' });
-//     }
-//     var passwordIsValid = bcrypt.compareSync(passwordPassed, user.password);
-//     if (!passwordIsValid) {
-//       return res.status(401).send({
-//         message: 'Invalid Password!',
-//       });
-//     }
-//     var token = jwt.sign(
-//       {
-//         id: user.id,
-//       },
-//       process.env.API_SECRET || 'airtribesecret',
-//       {
-//         expiresIn: 86400,
-//       },
-//     );
-//     return res.status(200).send({
-//       user: {
-//         id: user.id,
-//         email: user.email,
-//         fullname: user.fullName,
-//       },
-//       message: 'Login Successful',
-//       accessToken: token,
-//     });
-//   });
-// };
+export const signin = async (req: Request, res: Response): Promise<void> => {
+  const emailPassed: string = req.body.email;
+  const passwordPassed: string = req.body.password;
+  User.findOne({
+    email: emailPassed,
+  }).then((user: UserDocument | null) => {
+    if (!user) {
+      return res.status(404).send({ message: 'User not found' });
+    }
+    const passwordIsValid: boolean = bcrypt.compareSync(
+      passwordPassed,
+      user.password,
+    );
+    if (!passwordIsValid) {
+      return res.status(401).send({
+        message: 'Invalid Password!',
+      });
+    }
+    const token: string = jwt.sign(
+      {
+        id: user.id,
+      },
+      process.env.API_SECRET || '',
+      {
+        expiresIn: 86400,
+      },
+    );
+    return res.status(200).send({
+      user: {
+        id: user.id,
+        email: user.email,
+        fullName: user.firstName + ' ' + user.lastName,
+      },
+      message: 'Login Successful',
+      accessToken: token,
+    });
+  });
+};

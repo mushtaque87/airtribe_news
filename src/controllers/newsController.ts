@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
 import log from '../utils/logs';
-import config from '../config/config.json';
+
 // const news = [
 //   {
 //     id: 1,
@@ -24,11 +24,19 @@ import config from '../config/config.json';
 // ];
 
 export const getNews = async (req: Request, res: Response): Promise<void> => {
+  log.info('getNews', req.params);
+  if (!req.user) {
+    res.status(403).send({
+      message: req.message,
+    });
+    return;
+  }
   const { searchquery } = req.params;
+  log.info('searchquery', searchquery);
   try {
     axios
       .get(
-        `https://newsapi.org/v2/everything?q=${searchquery}&from=2023-09-06&sortBy=publishedAt&apiKey=${config.APIKEY}`,
+        `https://newsapi.org/v2/everything?q=${searchquery}&from=2023-10-06&sortBy=publishedAt&apiKey=${process.env.APIKEY}`,
       )
       .then(
         (response: any) => {

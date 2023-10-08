@@ -3,10 +3,10 @@ import { ROLE } from '../utils/types';
 import mongoose, { model, Schema, Document } from 'mongoose';
 
 export interface UserDocument extends Document {
-  firstName: String;
-  lastName: String;
-  email: String;
-  password: String;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
   role: ROLE;
 }
 
