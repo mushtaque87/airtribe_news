@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import axios from 'axios';
 import log from '../utils/logs';
 import { News } from '../models/news';
+import { Preferences } from '../models/preferance';
 
 // const news = [
 //   {
@@ -32,12 +33,12 @@ export const getNews = async (req: Request, res: Response): Promise<void> => {
     });
     return;
   }
-  const { searchquery } = req.params;
-  log.info('searchquery', searchquery);
+  const { keyword } = req.params;
+  log.info('keyword', keyword);
   try {
     axios
       .get(
-        `https://newsapi.org/v2/everything?q=${searchquery}&from=2023-10-06&sortBy=publishedAt&apiKey=${process.env.APIKEY}`,
+        `https://newsapi.org/v2/everything?q=${keyword}&from=2023-10-06&sortBy=publishedAt&apiKey=${process.env.APIKEY}`,
       )
       .then(
         (response: any) => {
@@ -58,11 +59,33 @@ export const preferences = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
+  if (!req.user) {
+    res.status(403).send({
+      message: req.message,
+    });
+    return;
+  }
+  const { userId } = req.params;
+  const { preference } = req.body;
+  log.info('userId', userId);
   try {
     if (req.method === 'GET') {
-      res.json('GET preferences');
+      //res.json('GET News');
+      const preference = await Preferences.find({ userId: userId });
+      log.info('preference retreived', preference);
+      res.json(preference);
     } else {
-      res.json('Mark preferences');
+      //res.json('Save News');
+      const { title, description, priority, status } = req.body;
+      // let currentPreferences = await Preferences.find({ userId: userId });
+      // log.info('currentPreferences', currentPreferences);
+      const newpreference = new Preferences({
+        userId,
+        preference: preference,
+      });
+      log.info('newpreference', newpreference);
+      await newpreference.save();
+      res.json(newpreference);
     }
   } catch (err) {
     log.error(err);
@@ -88,9 +111,9 @@ export const read = async (req: Request, res: Response): Promise<void> => {
     } else {
       //res.json('Save News');
       const { title, description, priority, status } = req.body;
-      const task = new News({ userId, title, description, priority, status });
-      await task.save();
-      res.json(task);
+      const news = new News({ userId, title, description, priority, status });
+      await news.save();
+      res.json(news);
     }
   } catch (err) {
     log.error(err);

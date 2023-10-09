@@ -62,6 +62,7 @@ export const signin = async (req: Request, res: Response): Promise<void> => {
     );
     return res.status(200).send({
       user: {
+        userid: user.userId,
         id: user.id,
         email: user.email,
         fullName: user.firstName + ' ' + user.lastName,
