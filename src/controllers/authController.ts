@@ -6,12 +6,14 @@ import { User, UserDocument } from '../models/user';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import log from '../utils/logs';
+import { v4 as uuidv4 } from 'uuid';
 
 // import { log } from 'winston';
 
 export const signup = async (req: Request, res: Response): Promise<void> => {
   log.info('signup ***', req.body);
   const user = new User({
+    userId: uuidv4(),
     firstName: req.body.firstName,
     lastName: req.body.lastName,
     email: req.body.email,
@@ -22,7 +24,9 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
   user
     .save()
     .then((data: any) => {
-      return res.status(200).send({ message: 'User saved successfully' });
+      return res
+        .status(200)
+        .send({ message: `User saved successfully ${user}` });
     })
     .catch((err: any) => {
       return res.status(500).send({ message: err });

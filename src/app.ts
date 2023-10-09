@@ -9,6 +9,8 @@ import router from './routers/newsRouter';
 import authRouter from './routers/authRouter';
 import newsRouter from './routers/newsRouter';
 
+import { group } from 'express-group-routes';
+
 const app = express();
 
 app.use(cors());
@@ -25,7 +27,12 @@ app.use(helmet());
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/', newsRouter);
+
+// group('/news', (router: express.Router) => {
+
+// });
+
+app.use('/news', newsRouter);
 app.use('/', authRouter);
 
 export default app;

@@ -5,7 +5,7 @@ import { sign } from 'jsonwebtoken';
 
 const authRouter = express.Router();
 
-authRouter.post('/signup', signup);
-authRouter.post('/signin', signin);
+authRouter.post('/register', signup);
+authRouter.post('/login', signin);
 
 export default authRouter;

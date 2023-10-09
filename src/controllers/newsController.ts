@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import axios from 'axios';
 import log from '../utils/logs';
+import { News } from '../models/news';
 
 // const news = [
 //   {
@@ -53,12 +54,43 @@ export const getNews = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const read = async (req: Request, res: Response): Promise<void> => {
+export const preferences = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   try {
     if (req.method === 'GET') {
-      res.json('GET News');
+      res.json('GET preferences');
     } else {
-      res.json('Mark News');
+      res.json('Mark preferences');
+    }
+  } catch (err) {
+    log.error(err);
+    res.status(500).send('Server error');
+  }
+};
+
+export const read = async (req: Request, res: Response): Promise<void> => {
+  if (!req.user) {
+    res.status(403).send({
+      message: req.message,
+    });
+    return;
+  }
+  const { userId } = req.params;
+  log.info('userId', userId);
+  try {
+    if (req.method === 'GET') {
+      //res.json('GET News');
+      const news = await News.find({ userId: userId });
+      log.info('news retreived', news);
+      res.json(news);
+    } else {
+      //res.json('Save News');
+      const { title, description, priority, status } = req.body;
+      const task = new News({ userId, title, description, priority, status });
+      await task.save();
+      res.json(task);
     }
   } catch (err) {
     log.error(err);

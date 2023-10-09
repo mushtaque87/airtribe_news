@@ -7,10 +7,12 @@ import { verifyToken } from '../middlewares/authJWT';
 
 const newsRouter = express.Router();
 
-newsRouter.get('/news/:searchquery', verifyToken, getNews);
-newsRouter.get('/read', read);
-newsRouter.post('/read', read);
+newsRouter.get('/:searchquery', verifyToken, getNews);
+newsRouter.get('/:userId/read', verifyToken, read);
+newsRouter.post('/:userId/read', verifyToken, read);
 newsRouter.get('/favorite', favorite);
 newsRouter.post('/favorite', favorite);
+newsRouter.post('/preferences', favorite);
+newsRouter.post('/preferences', favorite);
 
 export default newsRouter;

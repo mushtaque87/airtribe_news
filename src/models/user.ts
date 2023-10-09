@@ -3,6 +3,7 @@ import { ROLE } from '../utils/types';
 import mongoose, { model, Schema, Document } from 'mongoose';
 
 export interface UserDocument extends Document {
+  userId: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -12,6 +13,12 @@ export interface UserDocument extends Document {
 
 const userSchema = new Schema<UserDocument>(
   {
+    userId: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: true,
+    },
     firstName: {
       type: String,
       required: true,

@@ -1,15 +1,24 @@
 import { model, Schema, Document } from 'mongoose';
 
 export interface NewsDocument extends Document {
+  userId: string;
   title: string;
   description: string;
   status: string;
+  url: string;
+  urlToImage: string;
   createdAt: Date;
-  updatedAt: Date;
+  publishedAt: Date;
 }
 
 const newsSchema = new Schema<NewsDocument>(
   {
+    userId: {
+      type: String,
+      required: true,
+      unique: false,
+      trim: true,
+    },
     title: {
       type: String,
       required: true,
@@ -22,7 +31,22 @@ const newsSchema = new Schema<NewsDocument>(
     },
     status: {
       type: String,
-      required: true,
+      required: false,
+      trim: true,
+    },
+    url: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    urlToImage: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    publishedAt: {
+      type: Date,
+      required: false,
       trim: true,
     },
   },
@@ -34,4 +58,4 @@ const newsSchema = new Schema<NewsDocument>(
 
 newsSchema.index({ title: 'text', description: 'text' });
 
-export const Task = model<NewsDocument>('News', newsSchema);
+export const News = model<NewsDocument>('News', newsSchema);

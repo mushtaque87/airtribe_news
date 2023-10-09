@@ -8,7 +8,7 @@ import log from './src/utils/logs';
 import dotenv from 'dotenv';
 dotenv.config();
 
-console.log(process.env);
+//console.log(process.env);
 
 const PORT = process.env.PORT || 9000;
 const MONGODB_URI =
