@@ -5,6 +5,8 @@ export interface NewsDocument extends Document {
   title: string;
   description: string;
   status: string;
+  read: boolean;
+  favorite: boolean;
   url: string;
   urlToImage: string;
   createdAt: Date;
@@ -31,6 +33,16 @@ const newsSchema = new Schema<NewsDocument>(
     },
     status: {
       type: String,
+      required: false,
+      trim: true,
+    },
+    read: {
+      type: Boolean,
+      required: false,
+      trim: true,
+    },
+    favorite: {
+      type: Boolean,
       required: false,
       trim: true,
     },

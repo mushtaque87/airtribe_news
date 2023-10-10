@@ -3,6 +3,7 @@ import log from '../utils/logs';
 import {
   favorite,
   getNews,
+  getNewsForPreference,
   preferences,
   read,
 } from '../controllers/newsController';
@@ -12,6 +13,7 @@ import { verifyToken } from '../middlewares/authJWT';
 
 const newsRouter = express.Router();
 
+newsRouter.get('/:userId', verifyToken, getNewsForPreference);
 newsRouter.get('/search/:keyword', verifyToken, getNews);
 newsRouter.get('/:userId/read', verifyToken, read);
 newsRouter.post('/:userId/read', verifyToken, read);

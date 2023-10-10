@@ -35,6 +35,7 @@ export const getNews = async (req: Request, res: Response): Promise<void> => {
   }
   const { keyword } = req.params;
   log.info('keyword', keyword);
+
   try {
     axios
       .get(
@@ -44,6 +45,50 @@ export const getNews = async (req: Request, res: Response): Promise<void> => {
         (response: any) => {
           log.info(response.data);
           res.status(200).json(response.data.articles);
+        },
+        error => {
+          console.log(error);
+        },
+      );
+  } catch (err) {
+    log.error(err);
+    res.status(500).send('Server error');
+  }
+};
+
+export const getNewsForPreference = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  log.info('getNews', req.params);
+  if (!req.user) {
+    res.status(403).send({
+      message: req.message,
+    });
+    return;
+  }
+  const { userId } = req.params;
+  const { keyword } = req.params;
+  log.info('keyword', keyword);
+
+  try {
+    const preferences = await Preferences.find({ userId: userId });
+    log.info('preferences', preferences);
+    const randomIndex = Math.floor(Math.random() * preferences.length);
+    const randomPreference = preferences[randomIndex].preference;
+    log.info('randomPreference', randomPreference);
+
+    axios
+      .get(
+        `https://newsapi.org/v2/everything?q=${randomPreference}&from=2023-10-06&sortBy=publishedAt&apiKey=${process.env.APIKEY}`,
+      )
+      .then(
+        (response: any) => {
+          const articles = response.data.articles;
+          const randomIndex = Math.floor(Math.random() * articles.length);
+          const randomArticle = articles[randomIndex];
+          log.info(randomIndex);
+          res.status(200).json(randomArticle);
         },
         error => {
           console.log(error);
@@ -105,7 +150,7 @@ export const read = async (req: Request, res: Response): Promise<void> => {
   try {
     if (req.method === 'GET') {
       //res.json('GET News');
-      const news = await News.find({ userId: userId });
+      const news = await News.find({ userId: userId, read: true });
       log.info('news retreived', news);
       res.json(news);
     } else {
