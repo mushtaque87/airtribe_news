@@ -2,6 +2,7 @@ import { model, Schema, Document } from 'mongoose';
 
 export interface NewsDocument extends Document {
   userId: string;
+  newsId: string;
   title: string;
   description: string;
   status: string;
@@ -15,6 +16,12 @@ export interface NewsDocument extends Document {
 
 const newsSchema = new Schema<NewsDocument>(
   {
+    newsId: {
+      type: String,
+      required: true,
+      unique: false,
+      trim: true,
+    },
     userId: {
       type: String,
       required: true,
@@ -38,7 +45,7 @@ const newsSchema = new Schema<NewsDocument>(
     },
     read: {
       type: Boolean,
-      required: false,
+      required: true,
       trim: true,
     },
     favorite: {

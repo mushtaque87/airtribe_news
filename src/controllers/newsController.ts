@@ -3,6 +3,8 @@ import axios from 'axios';
 import log from '../utils/logs';
 import { News } from '../models/news';
 import { Preferences } from '../models/preferance';
+import crypto from 'crypto';
+import { generateId } from '../utils/utils';
 
 // const news = [
 //   {
@@ -88,6 +90,17 @@ export const getNewsForPreference = async (
           const randomIndex = Math.floor(Math.random() * articles.length);
           const randomArticle = articles[randomIndex];
           log.info(randomIndex);
+
+          const { title, description, url, urlToImage, status } = randomArticle;
+          const newsId = generateId();
+          const news = new News({
+            newsId,
+            userId,
+            title,
+            description,
+            read: true,
+          });
+          news.save();
           res.status(200).json(randomArticle);
         },
         error => {
@@ -155,8 +168,16 @@ export const read = async (req: Request, res: Response): Promise<void> => {
       res.json(news);
     } else {
       //res.json('Save News');
+      const newsId = generateId();
       const { title, description, priority, status } = req.body;
-      const news = new News({ userId, title, description, priority, status });
+      const news = new News({
+        newsId,
+        userId,
+        title,
+        description,
+        priority,
+        status,
+      });
       await news.save();
       res.json(news);
     }
