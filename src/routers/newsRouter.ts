@@ -17,8 +17,8 @@ newsRouter.get('/:userId', verifyToken, getNewsForPreference);
 newsRouter.get('/search/:keyword', verifyToken, getNews);
 newsRouter.get('/:userId/read', verifyToken, read);
 newsRouter.post('/:userId/read', verifyToken, read);
-newsRouter.get('/favorite', favorite);
-newsRouter.post('/favorite', favorite);
+newsRouter.get('/:userId/favorite', verifyToken, favorite);
+newsRouter.post('/:userId/favorite', verifyToken, favorite);
 newsRouter.get('/:userId/preferences', verifyToken, preferences);
 newsRouter.post('/:userId/preferences', verifyToken, preferences);
 

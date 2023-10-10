@@ -187,12 +187,34 @@ export const read = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const favorite = async (req: Request, res: Response): Promise<void> => {
+export const favorite = async (req: Request, res: Response) => {
+  if (!req.user) {
+    res.status(403).send({
+      message: req.message,
+    });
+    return;
+  }
+  const { userId } = req.params;
+  log.info('userId', userId);
   try {
     if (req.method === 'GET') {
-      res.json('GET Fav');
+      const news = await News.find({ userId: userId, favorite: true });
+      log.info('fav news ', news);
+      res.json(news);
     } else {
-      res.json('Mark Fav');
+      const { newsId } = req.body;
+      log.info('newsId', newsId);
+      const updatedNews = await News.findOneAndUpdate(
+        { userId: userId, newsId: newsId },
+        { favorite: true },
+      );
+
+      if (!updatedNews) {
+        return res.status(404).json({ error: 'News not found' });
+      }
+
+      log.info('news', updatedNews);
+      res.json('News marked as favorite');
     }
   } catch (err) {
     log.error(err);
