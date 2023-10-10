@@ -43,6 +43,14 @@ _Save a preference._
 
 _Retrieve all preferences._
 
+### POST /:userId/favorites
+
+_Mark a news as favorite._
+
+### GET /:userId/favorites
+
+_Retrieve all favorite news._
+
 **Postman collection Included in the project repo**
 https://pyypl-automation.postman.co/workspace/Team-Workspace~7c9314e6-3447-4b31-8377-c1c5e4bfe632/folder/29807680-7f907699-1980-414e-9c49-b315c52b8f39?action=share&creator=29807680&ctx=documentation
 
